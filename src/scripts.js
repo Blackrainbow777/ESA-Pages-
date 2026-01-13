@@ -1,5 +1,12 @@
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
+    // 创建回到顶部按钮
+    const backToTopBtn = document.createElement('button');
+    backToTopBtn.className = 'back-to-top';
+    backToTopBtn.innerHTML = '↑';
+    backToTopBtn.setAttribute('aria-label', '回到顶部');
+    document.body.appendChild(backToTopBtn);
+    
     // 平滑滚动导航
     const navLinks = document.querySelectorAll('.nav-list a');
     
@@ -36,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, observerOptions);
     
     // 观察需要淡入的元素
-    const fadeElements = document.querySelectorAll('.article-item, .plan-item, .content');
+    const fadeElements = document.querySelectorAll('.article-item, .plan-item, .content, .tag');
     fadeElements.forEach(element => {
         element.style.opacity = '0';
         element.style.transform = 'translateY(20px)';
@@ -44,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(element);
     });
     
-    // 监听滚动事件，更新当前激活的导航项
+    // 监听滚动事件，更新当前激活的导航项和回到顶部按钮的可见性
     window.addEventListener('scroll', function() {
         const sections = document.querySelectorAll('.section');
         const navItems = document.querySelectorAll('.nav-item');
@@ -64,6 +71,57 @@ document.addEventListener('DOMContentLoaded', function() {
             if (item.querySelector('a').getAttribute('href') === `#${currentSection}`) {
                 item.classList.add('active');
             }
+        });
+        
+        // 控制回到顶部按钮的显示与隐藏
+        if (window.scrollY > 500) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+    
+    // 回到顶部按钮点击事件
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
+    // 添加技能标签悬停动画效果
+    const tags = document.querySelectorAll('.tag');
+    tags.forEach(tag => {
+        tag.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.05)';
+        });
+        
+        tag.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // 添加文章卡片悬停效果
+    const articleItems = document.querySelectorAll('.article-item');
+    articleItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // 添加规划卡片悬停效果
+    const planItems = document.querySelectorAll('.plan-item');
+    planItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(8px) translateY(-2px)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(4px) translateY(0)';
         });
     });
 });
